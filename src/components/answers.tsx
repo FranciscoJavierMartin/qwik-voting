@@ -1,4 +1,4 @@
-import { type Signal, component$ } from '@builder.io/qwik';
+import { type Signal, component$, type PropFunction } from '@builder.io/qwik';
 import type { Answer, Question } from '@prisma/client';
 import type { VoteTally } from '~/types';
 
@@ -6,7 +6,9 @@ export default component$<{
   question: Question;
   answers: Answer[];
   voteTallies: Signal<VoteTally[]>;
-}>(({ question, answers, voteTallies }) => {
+  loggedIn: boolean;
+  onVote$?: PropFunction<(questionId: number, answerId: number) => void>;
+}>(({ question, answers, voteTallies, loggedIn, onVote$ }) => {
   return (
     <div class='px-5 grid grid-cols-[40%_25%_25%_10%] gap-2'>
       {answers.map((answer) => {
@@ -21,7 +23,16 @@ export default component$<{
         return (
           <>
             <div>{answer.answer}</div>
-            <div class='flex justify-center'></div>
+            <div class='flex justify-center'>
+              {loggedIn && (
+                <button
+                  class='btn btn-primary btn-sm px-10'
+                  onClick$={() => onVote$?.(question.id, answer.id)}
+                >
+                  Vote
+                </button>
+              )}
+            </div>
             <div>
               <progress
                 class='progress progress-error w-full'
