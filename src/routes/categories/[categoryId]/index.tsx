@@ -1,4 +1,10 @@
-import { $, component$, useComputed$, useSignal } from '@builder.io/qwik';
+import {
+  $,
+  component$,
+  useComputed$,
+  useSignal,
+  useVisibleTask$,
+} from '@builder.io/qwik';
 import { routeLoader$, server$ } from '@builder.io/qwik-city';
 import type { Question } from '@prisma/client';
 import Answers from '~/components/answers';
@@ -99,6 +105,18 @@ export default component$(() => {
 
     response.value = voteResponse.thankYou;
     updatedVotes.value = voteResponse.votes;
+  });
+
+  useVisibleTask$(({ cleanup, track }) => {
+    track(() => response.value);
+
+    if (response.value) {
+      const timeout = setTimeout(() => {
+        response.value = '';
+      }, 3000);
+
+      cleanup(() => clearTimeout(timeout));
+    }
   });
 
   return (
