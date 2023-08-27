@@ -13,8 +13,6 @@ export default component$(() => {
   const categories = useCategories();
   const location = useLocation();
 
-  console.log(location.url.pathname);
-
   useStyles$(styles);
   return (
     <>
