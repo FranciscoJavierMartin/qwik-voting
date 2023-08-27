@@ -11,5 +11,9 @@ export default defineConfig(() => {
         "Cache-Control": "public, max-age=600",
       },
     },
+    optimizeDeps: { include: ['@auth/core'] },
+    server:{
+      port:3002
+    }
   };
 });
